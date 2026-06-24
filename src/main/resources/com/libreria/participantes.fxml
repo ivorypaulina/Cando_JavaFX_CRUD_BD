@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.libreria.controller.ParticipantesController"
+            styleClass="main-root"
+            prefWidth="1180" prefHeight="730">
+
+    <!-- ═══ BARRA SUPERIOR ═══ -->
+    <top>
+        <HBox styleClass="topbar" alignment="CENTER_LEFT" spacing="14">
+            <Label text="🎵  Librería Musical – Gestión de Participantes" styleClass="topbar-title"/>
+            <HBox HBox.hgrow="ALWAYS"/>
+            <Button text="✕  Salir" onAction="#onSalir" styleClass="btn-danger"/>
+        </HBox>
+    </top>
+
+    <!-- ═══ LAYOUT PRINCIPAL ═══ -->
+    <center>
+        <SplitPane dividerPositions="0.37" styleClass="main-split">
+
+            <!-- ─── PANEL FORMULARIO (PASO 5) ─── -->
+            <ScrollPane fitToWidth="true" styleClass="form-scroll">
+                <VBox styleClass="form-panel" spacing="13">
+
+                    <Label text="Datos del Participante" styleClass="section-title"/>
+
+                    <!-- ID automático -->
+                    <HBox spacing="8" alignment="CENTER_LEFT">
+                        <Label text="ID:" styleClass="field-label" minWidth="50"/>
+                        <Label fx:id="lblIdGenerado" text="(Auto)" styleClass="id-badge"/>
+                    </HBox>
+
+                    <!-- Cédula -->
+                    <Label text="Cédula *" styleClass="field-label"/>
+                    <TextField fx:id="txtCedula" promptText="Solo números" styleClass="field-input"/>
+
+                    <!-- Nombre / Apellido -->
+                    <HBox spacing="10">
+                        <VBox HBox.hgrow="ALWAYS" spacing="4">
+                            <Label text="Nombre *" styleClass="field-label"/>
+                            <TextField fx:id="txtNombre" promptText="Nombre" styleClass="field-input"/>
+                        </VBox>
+                        <VBox HBox.hgrow="ALWAYS" spacing="4">
+                            <Label text="Apellido *" styleClass="field-label"/>
+                            <TextField fx:id="txtApellido" promptText="Apellido" styleClass="field-input"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Edad / Correo -->
+                    <HBox spacing="10">
+                        <VBox HBox.hgrow="ALWAYS" spacing="4">
+                            <Label text="Edad *  (mayor a 5)" styleClass="field-label"/>
+                            <TextField fx:id="txtEdad" promptText="Ej: 25" styleClass="field-input"/>
+                        </VBox>
+                        <VBox HBox.hgrow="ALWAYS" spacing="4">
+                            <Label text="Correo *" styleClass="field-label"/>
+                            <TextField fx:id="txtCorreo" promptText="correo@ejemplo.com" styleClass="field-input"/>
+                        </VBox>
+                    </HBox>
+
+                    <!-- Estado Civil – ComboBox -->
+                    <Label text="Estado Civil *" styleClass="field-label"/>
+                    <ComboBox fx:id="cmbEstadoCivil" promptText="Seleccione..."
+                              maxWidth="Infinity" styleClass="field-input"/>
+
+                    <!-- Jornada – RadioButton con ToggleGroup -->
+                    <Label text="Jornada *" styleClass="field-label"/>
+                    <HBox spacing="18" styleClass="radio-group">
+                        <RadioButton fx:id="rbMatutina" text="Matutina" styleClass="radio-btn">
+                            <toggleGroup><ToggleGroup fx:id="tgJornada"/></toggleGroup>
+                        </RadioButton>
+                        <RadioButton fx:id="rbVespertina" text="Vespertina"
+                                     toggleGroup="$tgJornada" styleClass="radio-btn"/>
+                        <RadioButton fx:id="rbNocturna" text="Nocturna"
+                                     toggleGroup="$tgJornada" styleClass="radio-btn"/>
+                    </HBox>
+
+                    <!-- Categoría – ComboBox -->
+                    <Label text="Categoría *" styleClass="field-label"/>
+                    <ComboBox fx:id="cmbCategoria" promptText="Seleccione..."
+                              maxWidth="Infinity" styleClass="field-input"/>
+
+                    <!-- Observaciones – TextArea -->
+                    <Label text="Observaciones" styleClass="field-label"/>
+                    <TextArea fx:id="txtObservaciones" promptText="Notas adicionales..."
+                              prefRowCount="3" wrapText="true" styleClass="field-input"/>
+
+                    <!-- Botones -->
+                    <HBox spacing="8" alignment="CENTER">
+                        <Button text="🗑  Limpiar"  onAction="#onNuevo"    styleClass="btn-secondary"/>
+                        <Button text="❌  Eliminar" onAction="#onEliminar"  styleClass="btn-danger"/>
+                        <Button text="💾  Guardar"  onAction="#onGuardar"   styleClass="btn-primary" defaultButton="true"/>
+                    </HBox>
+
+                </VBox>
+            </ScrollPane>
+
+            <!-- ─── PANEL TABLA ─── -->
+            <VBox styleClass="table-panel" spacing="10">
+                <Label text="Participantes Registrados" styleClass="section-title"/>
+
+                <!-- Búsqueda -->
+                <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Label text="🔍" style="-fx-font-size:15px;"/>
+                    <TextField fx:id="txtBuscar"
+                               promptText="Buscar por nombre, apellido o cédula..."
+                               HBox.hgrow="ALWAYS" styleClass="field-input"/>
+                </HBox>
+
+                <!-- TableView con columnas del enunciado -->
+                <TableView fx:id="tablaParticipantes" VBox.vgrow="ALWAYS" styleClass="data-table">
+                    <columns>
+                        <TableColumn fx:id="colId"          text="ID"         prefWidth="45"/>
+                        <TableColumn fx:id="colCedula"      text="Cédula"     prefWidth="95"/>
+                        <TableColumn fx:id="colNombre"      text="Nombre"     prefWidth="100"/>
+                        <TableColumn fx:id="colApellido"    text="Apellido"   prefWidth="100"/>
+                        <TableColumn fx:id="colEdad"        text="Edad"       prefWidth="48"/>
+                        <TableColumn fx:id="colCorreo"      text="Correo"     prefWidth="155"/>
+                        <TableColumn fx:id="colEstadoCivil" text="Est. Civil" prefWidth="82"/>
+                        <TableColumn fx:id="colJornada"     text="Jornada"    prefWidth="82"/>
+                        <TableColumn fx:id="colCategoria"   text="Categoría"  prefWidth="95"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="No hay participantes registrados." styleClass="table-placeholder"/>
+                    </placeholder>
+                </TableView>
+            </VBox>
+
+        </SplitPane>
+    </center>
+</BorderPane>
