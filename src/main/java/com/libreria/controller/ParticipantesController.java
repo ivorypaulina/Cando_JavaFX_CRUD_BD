@@ -13,18 +13,9 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-/**
- * PASOS 5–9 – Controlador de la ventana CRUD de Participantes.
- *
- * PASO 5 · Diseño de controles (inyectados con @FXML)
- * PASO 6 · onGuardar() → INSERT con validaciones + try-catch
- * PASO 7 · cargarTabla() → SELECT con try-catch
- * PASO 8 · selección en tabla → formulario → UPDATE con try-catch
- * PASO 9 · onEliminar() → Alert CONFIRMATION → DELETE con try-catch
- */
 public class ParticipantesController implements Initializable {
 
-    // ── PASO 5 · Controles del formulario ─────────────────────────
+    // Controles del formulario ─────────────────────────
     @FXML private Label           lblIdGenerado;
     @FXML private TextField       txtCedula;
     @FXML private TextField       txtNombre;
@@ -54,10 +45,9 @@ public class ParticipantesController implements Initializable {
     @FXML private TableColumn<Participante, String>  colJornada;
     @FXML private TableColumn<Participante, String>  colCategoria;
 
-    /** ID del registro seleccionado; -1 = modo "nuevo". */
     private int idSeleccionado = -1;
 
-    // ── PASO 5 · Inicialización ───────────────────────────────────
+    // ── Inicialización ───────────────────────────────────
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // ComboBox opciones
@@ -75,24 +65,21 @@ public class ParticipantesController implements Initializable {
         colJornada.setCellValueFactory(new PropertyValueFactory<>("jornada"));
         colCategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
 
-        // PASO 8 · Listener: clic en fila → carga formulario
         tablaParticipantes.getSelectionModel().selectedItemProperty()
                 .addListener((obs, old, nuevo) -> {
                     if (nuevo != null) cargarEnFormulario(nuevo);
                 });
 
-        // PASO 7 · Cargar datos iniciales
         cargarTabla();
     }
 
-    // ── PASO 7 · LEER ─────────────────────────────────────────────
+    // LEER ─────────────────────────────────────────────
     /** Ejecuta SELECT y enlaza la lista al TableView con filtro de búsqueda. */
     private void cargarTabla() {
         try {
             FilteredList<Participante> listaFiltrada =
                     new FilteredList<>(ParticipanteDAO.leer(), p -> true);
 
-            // Filtro en tiempo real por nombre, apellido o cédula
             txtBuscar.textProperty().addListener((obs, oldVal, newVal) ->
                 listaFiltrada.setPredicate(p -> {
                     if (newVal == null || newVal.isBlank()) return true;
@@ -112,10 +99,10 @@ public class ParticipantesController implements Initializable {
         }
     }
 
-    // ── PASO 6 / 8 · GUARDAR (INSERT o UPDATE) ───────────────────
+    // ── GUARDAR (INSERT o UPDATE) ───────────────────
     @FXML
     private void onGuardar() {
-        // ── Validaciones (PASO 6) ─────────────────────────────────
+        // ── Validaciones ─────────────────────────────────
         try {
             String cedula    = txtCedula.getText().trim();
             String nombre    = txtNombre.getText().trim();
@@ -138,7 +125,6 @@ public class ParticipantesController implements Initializable {
                 throw new IllegalArgumentException("La cédula debe contener solo números.");
             }
 
-            // Edad numérica y mayor a 5
             int edad;
             try {
                 edad = Integer.parseInt(edadStr);
@@ -174,12 +160,12 @@ public class ParticipantesController implements Initializable {
 
             // ── INSERT o UPDATE ───────────────────────────────────
             if (idSeleccionado == -1) {
-                // PASO 6 · Crear
+                // Crear
                 ParticipanteDAO.crear(p);
                 mostrarAlerta(Alert.AlertType.INFORMATION,
                         "Registro exitoso", "Participante registrado correctamente.");
             } else {
-                // PASO 8 · Actualizar
+                // Actualizar
                 ParticipanteDAO.actualizar(p);
                 mostrarAlerta(Alert.AlertType.INFORMATION,
                         "Actualización exitosa", "Participante actualizado correctamente.");
@@ -196,7 +182,7 @@ public class ParticipantesController implements Initializable {
         }
     }
 
-    // ── PASO 9 · ELIMINAR ─────────────────────────────────────────
+    // ── ELIMINAR ─────────────────────────────────────────
     @FXML
     private void onEliminar() {
         Participante seleccionado = tablaParticipantes.getSelectionModel().getSelectedItem();
@@ -207,7 +193,7 @@ public class ParticipantesController implements Initializable {
             return;
         }
 
-        // Alert de CONFIRMACIÓN (PASO 9)
+        // Alert de CONFIRMACIÓN
         Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
         confirm.setTitle("Confirmar eliminación");
         confirm.setHeaderText("¿Está seguro de eliminar este participante?");
@@ -233,7 +219,7 @@ public class ParticipantesController implements Initializable {
         });
     }
 
-    // ── Limpiar formulario / modo Nuevo ───────────────────────────
+    // ── Limpiar formulario ───────────────────────────
     @FXML
     private void onNuevo() {
         idSeleccionado = -1;
@@ -251,7 +237,7 @@ public class ParticipantesController implements Initializable {
         tablaParticipantes.getSelectionModel().clearSelection();
     }
 
-    // ── PASO 8 · Cargar fila seleccionada en el formulario ────────
+    // Cargar fila seleccionada en el formulario ────────
     private void cargarEnFormulario(Participante p) {
         idSeleccionado = p.getId();
         lblIdGenerado.setText(String.valueOf(p.getId()));
