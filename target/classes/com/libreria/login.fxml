@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.libreria.controller.LoginController"
+      styleClass="login-root"
+      alignment="CENTER"
+      spacing="0"
+      prefWidth="440" prefHeight="520">
+
+    <!-- Cabecera -->
+    <VBox styleClass="login-header" alignment="CENTER" spacing="8">
+        <Label text="🎵" style="-fx-font-size:52px;"/>
+        <Label text="Librería Musical" styleClass="login-title"/>
+        <Label text="Sistema de Gestión de Participantes" styleClass="login-subtitle"/>
+    </VBox>
+
+    <!-- Formulario -->
+    <VBox styleClass="login-form" spacing="16">
+
+        <Label text="Usuario" styleClass="field-label"/>
+        <TextField fx:id="txtUsuario" promptText="Ingrese su usuario" styleClass="field-input"/>
+
+        <Label text="Contraseña" styleClass="field-label"/>
+        <PasswordField fx:id="txtPassword" promptText="Ingrese su contraseña" styleClass="field-input"/>
+
+        <HBox spacing="12" alignment="CENTER_RIGHT">
+            <Button text="Salir"    onAction="#onSalir"    styleClass="btn-secondary"/>
+            <Button text="Ingresar" onAction="#onIngresar" styleClass="btn-primary" defaultButton="true"/>
+        </HBox>
+
+        <Label text="(admin / 1234)" styleClass="login-hint"/>
+    </VBox>
+</VBox>
